@@ -5,6 +5,7 @@
  * @author Mark Craft, Qinglin Chen
  * @date Fall 2016
  */
+// what is this part for?
 (function(document) {
 'use strict';
 var feeds = new Set();
@@ -20,16 +21,21 @@ function text(res) {
  */
 function httpGet(input, type, data) {
 
-	var server = "https://fbserve.herokuapp.com/";
+	var server = "http://localhost:5000";
 	var contents = "?content=";
 	var page = (type=="url")? decode(input) : input;
+// decode is a function defined later
 	var theUrl = server + contents + page;
 	theUrl = theUrl.replace("&", "^");
+// concatentate the url and make it to something like
+// http://localhost:5000?content=<thepageurl>
 
 	//console.log("Type: " + type + " : " + page);
 
 	fetch(theUrl)
+// get the reply which is put into the variable text, which is "verified" or otherwise
 		.then(text).then(function(text) {
+// this create a button element beside the title
 			var btn = document.createElement('div'),
 				button = Ladda.create(btn);
 			btn.style = "font-weight:bold; padding: 3px; position:absolute; top: 4px; right: 30px;background: #3b5998; font-size: 15px;";
@@ -52,6 +58,7 @@ function httpGet(input, type, data) {
  * @param the text to display on the button
  * @param whether the server is down or not
  */
+// this function is not mentioned anywhere else in the repo
 function createButton(btn, loc) {
 	var btn = document.createElement('div'),
 		button = Ladda.create(btn);
@@ -68,6 +75,7 @@ function createButton(btn, loc) {
  *
  * @param the information to display
  */
+// mentioned only in createButton which is not mentioned anywhere else
 function hoverTooltip(info) {
 	//console.log("hovering: " + info);
 }
@@ -76,6 +84,8 @@ function hoverTooltip(info) {
  * Parse through Facebook's encoded url for the actual url
  *
  */
+// str is the output, var whatever is the input.
+// taking this as a black box for now.
 function parseUri(str) {
   var o = parseUri.options,
     m = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
@@ -106,8 +116,9 @@ parseUri.options = {
 };
 
 function decode(code) {
+// code 
  var url_obj = parseUri(code);
-
+// the 
  if (url_obj.queryKey.u) {
    return url_obj.queryKey.u;
  } else if (url_obj.host === 'www.facebook.com') {
@@ -122,12 +133,14 @@ function decode(code) {
  * Refreshes every second.
  *
  */
+// httpGet brings posts to the backend
+// goes through the relevant elements
 setInterval(function() {
-
+// where does document come from?
 	var test = document.getElementsByClassName('_4-u2 mbm _5v3q _4-u8');
-
+// now test is an array of elements
 	for(var i=0; i<test.length; i++) {
-
+// fetch one of the elements
 		var data = test[i];
 
 		// Check if feed needs to be modified
@@ -190,7 +203,7 @@ setInterval(function() {
 
 		}
 	}
-
+// 1000 refers to every second
 }, 1000);
 
 })(document);
